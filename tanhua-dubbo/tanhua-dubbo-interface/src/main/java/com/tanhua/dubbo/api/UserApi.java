@@ -20,5 +20,7 @@ public interface UserApi {
      * @param user
      */
     Long save(User user);
+
+    void update(User user);
 //    User save(User user);
 }

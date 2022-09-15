@@ -28,4 +28,9 @@ public class UserApiImpl implements UserApi{
         return user.getId();
     }
 
+    @Override
+    public void update(User user) {
+        userMapper.updateById(user);
+    }
+
 }

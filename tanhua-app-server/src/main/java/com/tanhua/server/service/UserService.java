@@ -9,6 +9,7 @@ import com.tanhua.model.domain.User;
 import com.tanhua.model.domain.UserInfo;
 import com.tanhua.model.vo.ErrorResult;
 import com.tanhua.server.exception.BusinessException;
+import com.tanhua.server.interceptor.UserHolder;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -106,4 +107,49 @@ public class UserService {
     }
 
 
+    /**
+     * 修改修改手机号-1.发送验证码
+     */
+    public void sendVerificationCode() {
+        //TODO 需要修改
+//        String code = RandomStringUtils.randomNumeric(6);
+        String code = "111111";
+        String phone = UserHolder.getPhone();
+        try {
+//            smsTemplate.sendSms(phone,code);
+        } catch (Exception e) {
+            throw new BusinessException(ErrorResult.fail());
+        }
+        redisTemplate.opsForValue().set("MODIFY_CODE_"+phone, code,Duration.ofMinutes(5L));
+    }
+
+    /**
+     * 修改修改手机号-2.校验验证码
+     * @param map
+     * @return true为通过
+     */
+    public Boolean checkVerificationCode(Map map) {
+        String verificationCode = (String) map.get("verificationCode");
+        if (StringUtils.isEmpty(verificationCode)||verificationCode.length()!=6) return false;
+        String phone = UserHolder.getPhone();
+        String code = redisTemplate.opsForValue().get("MODIFY_CODE_" + phone);
+        if (StringUtils.isEmpty(code)||!code.equals(verificationCode)) return false;
+        redisTemplate.delete("MODIFY_CODE_" + phone);
+        return true;
+    }
+    /**
+     * 修改手机号-3.校验验证码
+     */
+    public void phone(Map map) {
+        String phone = (String) map.get("phone");
+        User user = userApi.findByMobile(phone);
+        if (user!=null){
+            throw new BusinessException(new ErrorResult("999999","手机号已注册"));
+        }
+        user = new User();
+        user.setMobile(phone);
+        user.setId(UserHolder.getId());
+
+        userApi.update(user);
+    }
 }
