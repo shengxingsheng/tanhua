@@ -25,9 +25,9 @@ public class UserInfoService {
     @DubboReference
     private UserInfoApi userInfoApi;
     @Autowired
-    OssTemplate ossTemplate;
+    private OssTemplate ossTemplate;
     @Autowired
-    AipFaceTemplate aipFaceTemplate;
+    private AipFaceTemplate aipFaceTemplate;
     /**
      * 新增用户信息
      * @param userInfo

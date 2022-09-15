@@ -29,7 +29,12 @@ public class TokenInterceptor implements HandlerInterceptor {
         }
         log.info("放行[已登录]：{} {}",method,uri);
         Claims claims = JwtUtils.getClaims(token);
-        Long id = (Long) claims.get("id");
+        Long id = null;
+        try {
+            id = (Long) claims.get("id");
+        } catch (ClassCastException e) {
+            id = ((Integer) claims.get("id")).longValue();
+        }
         String phone = (String) claims.get("phone");
 
         User user = new User();
