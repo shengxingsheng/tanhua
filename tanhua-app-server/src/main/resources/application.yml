@@ -1,0 +1,31 @@
+server:
+  port: 8080
+spring:
+  #Spring应用名称，用于SpringCloud服务注册和发现。该值在Dubbo Spring Cloud加持下被视作dubbo.application.name，因此，无需再显示地配置dubbo.application.name。
+  application:
+    name: tanhua-app-server
+  redis:
+    host: 192.168.136.160
+    port: 6379
+  cloud:
+    nacos:
+      #spring.cloud.nacos.discovery定义Nacos服务发现与注册配置，其中子属性server-addr指定Nacos服务器主机和端口。
+      discovery:
+        server-addr: 192.168.136.160:8848
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 20MB
+dubbo:
+  #Dubbo服务暴露的协议配置，其中子属性name为协议名称，port为协议端口（-1 表示自增端口，从 20880 开始）
+  #因为项目中存在多个服务提供端比如商品服务、会员服务等，这里为了方便设置为了-1
+  protocol:
+    name: dubbo
+    port: -1
+  #Dubbo服务注册中心的配置地址，它的值spring-cloud://localhost表示挂载到Spring Cloud注册中心，不配置的话会提示没有配置注册中心的错误。
+  registry:
+    address: spring-cloud://localhost
+  consumer:
+    check: false
+#Dubbo服务实现类的扫描基准包路径
+
