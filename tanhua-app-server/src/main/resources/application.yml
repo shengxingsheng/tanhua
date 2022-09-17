@@ -27,5 +27,6 @@ dubbo:
     address: spring-cloud://localhost
   consumer:
     check: false
-
+    timeout: 3000
+    retries: 0
 #阿里云短信、阿里云oss、百度人脸检测密钥配置在application.properties

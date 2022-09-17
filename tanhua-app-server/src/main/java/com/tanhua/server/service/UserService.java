@@ -138,13 +138,13 @@ public class UserService {
         return true;
     }
     /**
-     * 修改手机号-3.校验验证码
+     * 修改手机号-3.保存
      */
     public void phone(Map map) {
         String phone = (String) map.get("phone");
         User user = userApi.findByMobile(phone);
         if (user!=null){
-            throw new BusinessException(new ErrorResult("999999","手机号已注册"));
+            throw new BusinessException(ErrorResult.mobileError());
         }
         user = new User();
         user.setMobile(phone);
