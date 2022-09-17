@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
 import java.util.Collections;
 import java.util.List;
 
@@ -14,7 +15,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class PageResult {
+public class PageResult implements Serializable {
 
     /**
      * 总记录数
@@ -23,7 +24,7 @@ public class PageResult {
      */
     private Long counts;
     /**
-     *	页大小
+     * 页大小
      * 最大值: 50
      * 最小值: 5
      */
@@ -42,14 +43,21 @@ public class PageResult {
     private Integer page;
     /**
      * 列表
-     *
+     * <p>
      * 最小数量: 10
      * 元素是否都不同: true
      * 最大数量: 20
      * item 类型: object
      */
-    private List items= Collections.emptyList();
+    private List items = Collections.emptyList();
 
+    public PageResult(Integer page, Integer pageSize, Long counts, List list) {
+        this.page = page;
+        this.pagesize = pageSize;
+        this.items = list;
+        this.counts = counts;
+        this.pages = counts % pageSize == 0 ? counts / pageSize : counts / pageSize + 1;
+    }
 
 
 }

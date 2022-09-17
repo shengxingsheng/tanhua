@@ -15,8 +15,8 @@ import java.util.Map;
 
 public class JwtUtils {
 
-    // TOKEN的有效期1小时（ms）
-    public static final int TOkEN_TIME_OUT = 1000 * 60 * 60 * 1;
+    //TODO TOKEN的有效期24小时（ms）
+    public static final int TOkEN_TIME_OUT = 1000 * 60 * 60 * 24;
     // 加密KEY
     private static final String TOKEN_SECRET = "tanhua";
 
