@@ -24,8 +24,8 @@ public class MovementsController {
      * 发布动态
      */
     @PostMapping
-    public ResponseEntity movements(MovementDto movementDto, MultipartFile[] imageContent) throws IOException {
-        movementService.movements(movementDto,imageContent);
+    public ResponseEntity publish(MovementDto movementDto, MultipartFile[] imageContent) throws IOException {
+        movementService.publishMovement(movementDto, imageContent);
         return ResponseEntity.ok(null);
     }
 
@@ -33,10 +33,20 @@ public class MovementsController {
      * 我的动态
      */
     @GetMapping("/all")
-    public ResponseEntity all(Long userId,
-                              @RequestParam(defaultValue = "1") Integer page,
-                              @RequestParam(defaultValue = "10") Integer pageSize){
-        PageResult pageResult=movementService.all(userId,page,pageSize);
+    public ResponseEntity getMyMovements(Long userId,
+                                         @RequestParam(defaultValue = "1") Integer page,
+                                         @RequestParam(defaultValue = "10") Integer pageSize) {
+        PageResult pageResult = movementService.getMyMovements(userId, page, pageSize);
+        return ResponseEntity.ok(pageResult);
+    }
+
+    /**
+     * 好友动态
+     */
+    @GetMapping
+    public ResponseEntity getFriendMovements(@RequestParam(defaultValue = "1") Integer page,
+                                             @RequestParam(defaultValue = "10") Integer pageSize) {
+        PageResult pageResult = movementService.getFriendMovements(page, pageSize);
         return ResponseEntity.ok(pageResult);
     }
 }

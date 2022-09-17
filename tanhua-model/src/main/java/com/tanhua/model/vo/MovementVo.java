@@ -19,7 +19,9 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 public class MovementVo {
+
     private String id; //动态id
+
 
     private Long userId; //用户id
     private String avatar; //头像
@@ -59,7 +61,7 @@ public class MovementVo {
         Long created = movement.getCreated();
         Date date = new Date(created);
         vo.setCreateDate(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(date));
-        //设置是否点赞(后续处理)
+        //设置是否点赞(后续处理)TODO
         vo.setHasLoved(0);
         vo.setHasLiked(0);
         return vo;

@@ -3,8 +3,11 @@ package com.tanhua.dubbo.api;
 import com.tanhua.dubbo.service.TimLineService;
 import com.tanhua.dubbo.util.IdWorker;
 import com.tanhua.model.mongo.Movement;
+import com.tanhua.model.mongo.MovementTimeLine;
 import com.tanhua.model.vo.PageResult;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.dubbo.config.annotation.DubboService;
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -46,5 +49,21 @@ public class MovementApiImpl implements MovementApi{
                 .with(Sort.by(Sort.Order.desc("created")));
         List<Movement> movements = mongoTemplate.find(query, Movement.class);
         return new PageResult(page, pageSize, count, movements);
+    }
+
+    @Override
+    public List<Movement> findByFriendId(Long friendId, Integer page, Integer pageSize) {
+        //1.获取时间线
+        Query query = Query.query(Criteria.where("friendId").is(friendId))
+                .skip(pageSize * (page - 1))
+                .limit(pageSize)
+                .with(Sort.by(Sort.Order.desc("created")));
+        List<MovementTimeLine> list = mongoTemplate.find(query, MovementTimeLine.class);
+        //2.获取动态id集合
+        List<ObjectId> ids = (List<ObjectId>) CollectionUtils.collect(list, input -> ((MovementTimeLine)input).getMovementId());
+        //3.获取动态集合
+        query= Query.query(Criteria.where("id").in(ids));
+        List<Movement> movementList = mongoTemplate.find(query, Movement.class);
+        return movementList;
     }
 }

@@ -25,7 +25,8 @@ public class Movement implements Serializable {
     private String latitude; //纬度
     private String locationName; //位置名称
     private Integer state = 0;//状态 0：未审（默认），1：通过，2：驳回
-    private Integer likeCount;//点赞数
-    private Integer commentCount;//评论数
-    private Integer loveCount;//喜欢数
+
+    private Integer likeCount=0;//点赞数
+    private Integer commentCount=0;//评论数
+    private Integer loveCount=0;//喜欢数
 }
