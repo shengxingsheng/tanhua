@@ -1,5 +1,6 @@
 package com.tanhua.model.mongo;
 
+import com.tanhua.model.enums.CommentType;
 import lombok.Data;
 import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -26,7 +27,21 @@ public class Movement implements Serializable {
     private String locationName; //位置名称
     private Integer state = 0;//状态 0：未审（默认），1：通过，2：驳回
 
-    private Integer likeCount=0;//点赞数
-    private Integer commentCount=0;//评论数
-    private Integer loveCount=0;//喜欢数
+    //补充字段
+    private Integer likeCount = 0; //点赞数
+    private Integer commentCount = 0; //评论数
+    private Integer loveCount = 0; //喜欢数
+
+    public Integer statisCount(Integer commentType){
+        if (commentType== CommentType.COMMENT.getType()){
+            return commentCount;
+        }
+        if (commentType== CommentType.LIKE.getType()){
+            return likeCount;
+        }
+        if (commentType== CommentType.LOVE.getType()){
+            return loveCount;
+        }
+        return 0;
+    }
 }

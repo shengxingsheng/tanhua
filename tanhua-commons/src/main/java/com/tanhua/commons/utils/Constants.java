@@ -66,9 +66,13 @@ public class Constants {
     //环信用户前缀
     public static final String HX_USER_PREFIX = "hx";
 
-    //jwt加密盐
-    public static final String JWT_SECRET = "itcast";
+    /**
+     * jwt加密盐
+     */
+    public static final String JWT_SECRET = "tanhua";
 
-    //jwt超时时间
-    public static final int JWT_TIME_OUT = 3_600;
+    /**
+     * jwt超时时间 单位ms
+     */
+    public static final long JWT_TIME_OUT = 1000 * 60 * 60 * 24;
 }
