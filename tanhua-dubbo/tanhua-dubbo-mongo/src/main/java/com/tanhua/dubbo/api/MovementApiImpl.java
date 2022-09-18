@@ -11,6 +11,9 @@ import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.aggregation.Aggregation;
+import org.springframework.data.mongodb.core.aggregation.AggregationResults;
+import org.springframework.data.mongodb.core.aggregation.TypedAggregation;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 
@@ -65,5 +68,26 @@ public class MovementApiImpl implements MovementApi{
         query= Query.query(Criteria.where("id").in(ids));
         List<Movement> movementList = mongoTemplate.find(query, Movement.class);
         return movementList;
+    }
+
+
+    /**
+     * 根据pid获取
+     */
+    @Override
+    public List<Movement> findByPids(List<Long> pidList) {
+        Query query = Query.query(Criteria.where("pid").in(pidList));
+        List<Movement> list = mongoTemplate.find(query, Movement.class);
+        return list;
+    }
+
+    /**
+     * 随机获取
+     */
+    @Override
+    public List<Movement> randomMovements(Integer counts) {
+        TypedAggregation<Movement> aggregation = Aggregation.newAggregation(Movement.class, Aggregation.sample(counts));
+        AggregationResults<Movement> movements = mongoTemplate.aggregate(aggregation, Movement.class);
+        return movements.getMappedResults();
     }
 }

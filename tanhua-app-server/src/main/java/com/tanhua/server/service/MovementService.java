@@ -1,6 +1,7 @@
 package com.tanhua.server.service;
 
 import com.tanhua.autoconfig.template.OssTemplate;
+import com.tanhua.commons.utils.Constants;
 import com.tanhua.dubbo.api.MovementApi;
 import com.tanhua.dubbo.api.UserInfoApi;
 import com.tanhua.model.domain.UserInfo;
@@ -16,13 +17,13 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.dubbo.config.annotation.DubboReference;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author sxs
@@ -30,6 +31,8 @@ import java.util.Map;
  */
 @Service
 public class MovementService {
+    @Autowired
+    private RedisTemplate<String,String> redisTemplate;
     @Autowired
     private OssTemplate ossTemplate;
     @DubboReference
@@ -112,6 +115,48 @@ public class MovementService {
             movementVoList.add(movementVo);
         }
         //5.构建PageResult
-        return new PageResult(page,pageSize,0L, movementVoList);
+        return new PageResult(page, pageSize, 0L, movementVoList);
+    }
+
+    /**
+     * 推荐动态列表
+     */
+    public PageResult getRecommendMovements(Integer page, Integer pageSize) {
+        //1.向redis获取pid字符串
+        String redisKey = Constants.MOVEMENTS_RECOMMEND + UserHolder.getId();
+        String pid = (String) redisTemplate.opsForValue().get(redisKey);
+        //2.判断是否为空initialized = trueinitialized = true
+        List<Movement> movementList = Collections.EMPTY_LIST;
+        if (StringUtils.isEmpty(pid)) {
+            //2.1 为空则随机推荐
+            movementList = movementApi.randomMovements(pageSize);
+        } else {
+            //2.2 不为空则去动态表中查询  "16,17,18,19,20,21,22,23,24,25,27,28"
+            String[] split = pid.split(",");
+            Integer skipNum = pageSize * (page - 1);
+            //页数超过总页数
+            if (skipNum > split.length) {
+                return new PageResult();
+            }
+            List<Long> pidList = Arrays.stream(split)
+                    .skip(skipNum)
+                    .limit(pageSize)
+                    .map(s -> Long.valueOf(s.trim()))
+                    .collect(Collectors.toList());
+            movementList = movementApi.findByPids(pidList);
+        }
+        //3.获取用户id的集合
+        List<Long> ids = (List) CollectionUtils.collect(movementList, input -> ((Movement) input).getUserId());
+        //4，调用api查询userinfo
+        Map<Long, UserInfo> map = userInfoApi.findByIds(ids, null);
+        //5.构建MovementVO集合
+        List<MovementVo> movementVoList = new ArrayList<>();
+        for (Movement movement : movementList) {
+            UserInfo userInfo = map.get(movement.getUserId());
+            MovementVo init = MovementVo.init(movement, userInfo);
+            movementVoList.add(init);
+        }
+        //6，构建PageResult
+        return new PageResult(page, pageSize, 0L, movementVoList);
     }
 }

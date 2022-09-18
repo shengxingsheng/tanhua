@@ -15,4 +15,8 @@ public interface MovementApi {
     PageResult findByUserId(Long userId, Integer page, Integer pageSize);
 
     List<Movement> findByFriendId(Long userId, Integer page, Integer pageSize);
+
+    List<Movement> findByPids(List<Long> pidList);
+
+    List<Movement> randomMovements(Integer pageSize);
 }
