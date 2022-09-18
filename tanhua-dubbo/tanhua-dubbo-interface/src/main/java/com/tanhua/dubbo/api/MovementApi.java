@@ -19,4 +19,6 @@ public interface MovementApi {
     List<Movement> findByPids(List<Long> pidList);
 
     List<Movement> randomMovements(Integer pageSize);
+
+    Movement findById(String id);
 }

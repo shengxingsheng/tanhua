@@ -2,12 +2,39 @@ package com.tanhua.commons.utils;
 
 /**
  * 常量定义
+ *
  * @author sxs
  * @create 2022-09-18 1:00
  */
 public class Constants {
-    //手机APP短信验证码CHECK_CODE_
+
+    /**
+     * 手机APP短信验证码
+     */
     public static final String SMS_CODE = "CHECK_CODE_";
+
+    /**
+     * 手机APP短信验证码-更换手机号
+     */
+    public static final String MODIFY_CODE = "MODIFY_CODE_";
+
+    /**
+     * 手机号长度
+     */
+    public static final Integer PHONE_LENGTH = 11;
+    /**
+     * 验证码长度
+     */
+    public static final Integer CODE_LENGTH = 6;
+
+    /**
+     * 验证码过期时间,单位：分钟
+     */
+    public static final Long CODE_DEADLINE = 5L;
+    /**
+     * 默认密码
+     */
+    public static final String DEFAULT_PASSWORD = "123456";
 
     //推荐动态
     public static final String MOVEMENTS_RECOMMEND = "MOVEMENTS_RECOMMEND_";

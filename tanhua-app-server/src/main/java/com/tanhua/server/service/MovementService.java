@@ -32,7 +32,7 @@ import java.util.stream.Collectors;
 @Service
 public class MovementService {
     @Autowired
-    private RedisTemplate<String,String> redisTemplate;
+    private RedisTemplate<String, String> redisTemplate;
     @Autowired
     private OssTemplate ossTemplate;
     @DubboReference
@@ -158,5 +158,21 @@ public class MovementService {
         }
         //6，构建PageResult
         return new PageResult(page, pageSize, 0L, movementVoList);
+    }
+
+    /**
+     * 获取单条动态
+     *
+     * @param id 动态id
+     * @return
+     */
+    public MovementVo getOne(String id) {
+        Movement movement = movementApi.findById(id);
+        if (movement==null){
+            return null;
+        }
+        UserInfo userInfo = userInfoApi.findById(movement.getUserId());
+        MovementVo vo = MovementVo.init(movement, userInfo);
+        return vo;
     }
 }

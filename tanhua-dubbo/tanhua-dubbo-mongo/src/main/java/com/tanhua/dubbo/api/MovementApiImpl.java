@@ -90,4 +90,14 @@ public class MovementApiImpl implements MovementApi{
         AggregationResults<Movement> movements = mongoTemplate.aggregate(aggregation, Movement.class);
         return movements.getMappedResults();
     }
+
+    /**
+     * 获取单条动态
+     * @param id
+     * @return
+     */
+    @Override
+    public Movement findById(String id) {
+        return mongoTemplate.findById(id, Movement.class);
+    }
 }

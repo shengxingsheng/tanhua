@@ -1,6 +1,7 @@
 package com.tanhua.server.controller;
 
 import com.tanhua.model.dto.MovementDto;
+import com.tanhua.model.vo.MovementVo;
 import com.tanhua.model.vo.PageResult;
 import com.tanhua.server.service.MovementService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,5 +58,13 @@ public class MovementsController {
                                     @RequestParam(defaultValue = "10") Integer pageSize){
         PageResult pageResult = movementService.getRecommendMovements(page, pageSize);
         return ResponseEntity.ok(pageResult);
+    }
+    /**
+     * 查询单条动态
+     */
+    @GetMapping("/{id}")
+    public ResponseEntity getOne(@PathVariable String id){
+        MovementVo movementVo = movementService.getOne(id);
+        return ResponseEntity.ok(movementVo);
     }
 }
